@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cadastro de Treino"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etNomeTreino"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome do Treino" />
+
+        <Spinner
+            android:id="@+id/spinnerTipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etDataTreino"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Data do Treino (DD/MM/YYYY)"
+            android:layout_marginTop="8dp"
+            android:focusable="false" />
+
+        <EditText
+            android:id="@+id/etDuracao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Duração em minutos"
+            android:inputType="number"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerIntensidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/cbConcluido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Treino concluído?"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnSalvar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvar"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtros"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerFiltroTipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/cbFiltroConcluido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apenas concluídos"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvTotalTempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tempo total: 0 minutos"
+            android:layout_marginTop="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTreinos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            tools:listitem="@layout/item_treino" />
+
+    </LinearLayout>
+</ScrollView>
