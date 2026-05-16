@@ -37,4 +37,12 @@
         android:layout_height="wrap_content"
         android:text="Intensidade" />
 
+    <TextView
+        android:id="@+id/tvConcluido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp" />
+
 </LinearLayout>

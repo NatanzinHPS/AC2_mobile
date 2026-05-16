@@ -72,7 +72,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Filtros"
+            android:text="Filtros e Ordenação"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="24dp"
@@ -89,6 +89,18 @@
             android:layout_height="wrap_content"
             android:text="Apenas concluídos"
             android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ordenar por:"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerOrdenacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvTotalTempo"

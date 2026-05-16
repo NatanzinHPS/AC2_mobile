@@ -24,6 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -34,7 +39,7 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity {
 
     private EditText etNomeTreino, etDataTreino, etDuracao;
-    private Spinner spinnerTipo, spinnerIntensidade, spinnerFiltroTipo;
+    private Spinner spinnerTipo, spinnerIntensidade, spinnerFiltroTipo, spinnerOrdenacao;
     private CheckBox cbConcluido, cbFiltroConcluido;
     private Button btnSalvar;
     private RecyclerView recyclerViewTreinos;
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] tipos = {"Selecione", "Musculação", "Corrida", "Caminhada", "Ciclismo", "Funcional"};
     private String[] intensidades = {"Selecione", "Leve", "Moderada", "Intensa"};
+    private String[] ordenacoes = {"Sem ordenação", "Data (mais recente)", "Data (mais antiga)", "Duração (maior)", "Duração (menor)"};
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         cbFiltroConcluido = findViewById(R.id.cbFiltroConcluido);
         recyclerViewTreinos = findViewById(R.id.recyclerViewTreinos);
         tvTotalTempo = findViewById(R.id.tvTotalTempo);
+        spinnerOrdenacao = findViewById(R.id.spinnerOrdenacao);
 
         recyclerViewTreinos.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TreinoAdapter(new ArrayList<>(), this::onItemClick, this::onItemLongClick);
@@ -94,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> intensidadeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, intensidades);
         intensidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerIntensidade.setAdapter(intensidadeAdapter);
+
+        ArrayAdapter<String> ordenacaoAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ordenacoes);
+        ordenacaoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerOrdenacao.setAdapter(ordenacaoAdapter);
     }
 
     private void setupListeners() {
@@ -101,14 +113,17 @@ public class MainActivity extends AppCompatActivity {
 
         btnSalvar.setOnClickListener(v -> salvarTreino());
 
-        spinnerFiltroTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener filterListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 applyFilters();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        };
+
+        spinnerFiltroTipo.setOnItemSelectedListener(filterListener);
+        spinnerOrdenacao.setOnItemSelectedListener(filterListener);
 
         cbFiltroConcluido.setOnCheckedChangeListener((buttonView, isChecked) -> applyFilters());
     }
@@ -232,11 +247,20 @@ public class MainActivity extends AppCompatActivity {
     private void applyFilters() {
         String filtroTipo = spinnerFiltroTipo.getSelectedItem().toString();
         boolean filtroConcluido = cbFiltroConcluido.isChecked();
+        int ordenacaoPos = spinnerOrdenacao.getSelectedItemPosition();
 
         List<Treino> filtered = treinos.stream()
                 .filter(t -> filtroTipo.equals("Selecione") || t.getTipoTreino().equals(filtroTipo))
                 .filter(t -> !filtroConcluido || t.isFoiConcluido())
                 .collect(Collectors.toList());
+
+        switch (ordenacaoPos) {
+            case 1: filtered.sort((a, b) -> compareByDate(b, a)); break;
+            case 2: filtered.sort(this::compareByDate); break;
+            case 3: filtered.sort((a, b) -> Integer.compare(b.getDuracaoTreino(), a.getDuracaoTreino())); break;
+            case 4: filtered.sort(Comparator.comparingInt(Treino::getDuracaoTreino)); break;
+            default: break;
+        }
 
         adapter.treinos = filtered;
         adapter.notifyDataSetChanged();
@@ -278,6 +302,16 @@ public class MainActivity extends AppCompatActivity {
     private int getIndex(String[] array, String value) {
         for (int i = 0; i < array.length; i++) {
             if (array[i].equals(value)) return i;
+        }
+        return 0;
+    }
+
+    private int compareByDate(Treino a, Treino b) {
+        try {
+            Date dateA = SDF.parse(a.getDataTreino());
+            Date dateB = SDF.parse(b.getDataTreino());
+            if (dateA != null && dateB != null) return dateA.compareTo(dateB);
+        } catch (ParseException e) {
         }
         return 0;
     }

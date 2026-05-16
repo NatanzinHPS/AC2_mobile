@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import android.graphics.Color;
+
 public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.ViewHolder> {
 
     public List<Treino> treinos;
@@ -46,6 +48,13 @@ public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.ViewHolder
         holder.tvData.setText("Data: " + treino.getDataTreino());
         holder.tvDuracao.setText("Duração: " + treino.getDuracaoTreino() + " min");
         holder.tvIntensidade.setText("Intensidade: " + treino.getIntensidadeTreino());
+        if (treino.isFoiConcluido()) {
+            holder.tvConcluido.setText("Concluído");
+            holder.tvConcluido.setTextColor(Color.parseColor("#2E7D32"));
+        } else {
+            holder.tvConcluido.setText("Não concluído");
+            holder.tvConcluido.setTextColor(Color.parseColor("#B71C1C"));
+        }
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -67,7 +76,7 @@ public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNome, tvTipo, tvData, tvDuracao, tvIntensidade;
+        TextView tvNome, tvTipo, tvData, tvDuracao, tvIntensidade, tvConcluido;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +85,7 @@ public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.ViewHolder
             tvData = itemView.findViewById(R.id.tvData);
             tvDuracao = itemView.findViewById(R.id.tvDuracao);
             tvIntensidade = itemView.findViewById(R.id.tvIntensidade);
+            tvConcluido = itemView.findViewById(R.id.tvConcluido);
         }
     }
 }
